@@ -156,12 +156,10 @@ def generate_summary(weather_data):
         f"  The lowest temperature will be {minimum_temp}{DEGREE_SYMBOL}, and will occur on {min_temp_date}.\n"
         f"  The highest temperature will be {maximum_temp}{DEGREE_SYMBOL}, and will occur on {max_temp_date}.\n"
         f"  The average low this week is {mean_min_temp}{DEGREE_SYMBOL}.\n"
-        f"  The average high this week is {mean_max_temp}{DEGREE_SYMBOL}."
+        f"  The average high this week is {mean_max_temp}{DEGREE_SYMBOL}.\n"
     ) #string all functions together
 
     return (summary_string)
-# generate_summary(example_one)
-# generate_daily_summary(example_one)
 
 def generate_daily_summary(csv_file_path):
     """Outputs a daily summary for the given weather data.
@@ -174,16 +172,17 @@ def generate_daily_summary(csv_file_path):
     date_daily =[]
     min_daily_temp =[]
     max_daily_temp =[]
+    
     for row in csv_file_path:
             if row:
-                date_daily=convert_date(row[0])
-                min_daily_temp=round(convert_f_to_c(row[1]),1)
-                max_daily_temp=round(convert_f_to_c(row[2]),1)
+                date_daily = convert_date(row[0])
+                min_daily_temp = round(convert_f_to_c(row[1]), 1)
+                max_daily_temp = round(convert_f_to_c(row[2]), 1)
     
-    summary_daily_string =(
-        f"{'-' * 4} {date_daily} {'-' * 4}\n"
-        f"  Minimum temperature: {min_daily_temp}{DEGREE_SYMBOL}\n"
-        f"  Maximum temperature: {max_daily_temp}{DEGREE_SYMBOL}"
-    )
+            summary_daily_string =(
+                f"{'-' * 4} {date_daily} {'-' * 4}\n"
+                f"  Minimum temperature: {min_daily_temp}{DEGREE_SYMBOL}\n"
+                f"  Maximum temperature: {max_daily_temp}{DEGREE_SYMBOL}\n"
+            )
 
     return (summary_daily_string)
