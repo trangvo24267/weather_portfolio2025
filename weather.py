@@ -19,7 +19,7 @@ def format_temperature(temp):
         A string contain the temperature and "degrees Celcius."
     """
     return f"{temp}{DEGREE_SYMBOL}"
-print (format_temperature("40"))
+# print (format_temperature("40"))
 
 def convert_date(iso_string):
     """Converts and ISO formatted date into a human-readable format.
@@ -75,10 +75,16 @@ def load_data_from_csv(csv_file):
     """
     data_list =[]
     with open(csv_file, "r", newline="") as file:
-        csv_reader = csv.reader(csv_file)
-    for row in reader:
-            data_list.append(row)
+        csv_reader = csv.reader(file)
+        next(csv_reader)
+        for row in csv_reader:
+            if row:
+                date=row[0]
+                min=int(row[1])
+                max=int(row[2])
+                data_list.append([date,min,max])
     return data_list
+
 # load_data_from_csv(csv_file)
 
 def find_min(weather_data):
@@ -127,16 +133,35 @@ def generate_summary(weather_data):
     Returns:
         A string containing the summary information.
     """
-    with open(csv_file_path, "r", newline="") as file:
-        csv_reader = csv.reader(file)
-        next(csv_reader) # skip headers (first row)
+    
+    dates=[]
+    min_temp_list = []
+    max_temp_list = []
+    for row in weather_data:
+        if row:
+            dates.append(row[0])
+            min_temp_list.append(round(convert_f_to_c(row[1]),1))
+            max_temp_list.append(round(convert_f_to_c(row[2]),1))
 
-        row_count = sum(1 for row in reader)
-        print(f"{row_count} Day Overview")
-        print(f"The lowest temperature will be {min}, and will occur on {date_obj.st)rftime("%A %d %B %Y")}")
-        print(f"The highest temperature will be {max}, and will occur on {date_obj.st)rftime("%A %d %B %Y")}")
-        print(f"The average low this week is {mean}.")
-        print(f"The average high this week is {mean}.")
+    row_count = len(dates)
+    minimum_temp, min_position = find_min(min_temp_list) #storing function returns in 2 variables
+    min_temp_date = convert_date(dates[min_position]) #using above function for matching equivalent date to the above min temp
+    maximum_temp, max_position = find_max(max_temp_list)
+    max_temp_date = convert_date(dates[max_position])
+    mean_min_temp = round(calculate_mean(min_temp_list),1)
+    mean_max_temp = round(calculate_mean(max_temp_list),1)
+
+    summary_string = (
+        f"{row_count} Day Overview\n" 
+        f"  The lowest temperature will be {minimum_temp}{DEGREE_SYMBOL}, and will occur on {min_temp_date}.\n"
+        f"  The highest temperature will be {maximum_temp}{DEGREE_SYMBOL}, and will occur on {max_temp_date}.\n"
+        f"  The average low this week is {mean_min_temp}{DEGREE_SYMBOL}.\n"
+        f"  The average high this week is {mean_max_temp}{DEGREE_SYMBOL}."
+    ) #string all functions together
+
+    return (summary_string)
+# generate_summary(example_one)
+# generate_daily_summary(example_one)
 
 def generate_daily_summary(csv_file_path):
     """Outputs a daily summary for the given weather data.
@@ -146,15 +171,19 @@ def generate_daily_summary(csv_file_path):
     Returns:
         A string containing the summary information.
     """
-    with open(csv_file_path, "r", newline="") as file:
-        csv_reader = csv.reader(file)
-        next(csv_reader) # skip headers (first row)
-
-        for row in csv_reader:
+    date_daily =[]
+    min_daily_temp =[]
+    max_daily_temp =[]
+    for row in csv_file_path:
             if row:
-                date = row[0]
-                min = row[1]
-                max = row[2]
-            print(f"{'-' * 4} {date} {'-' * 4}")
-            print(f"Minimum temperature: {min}")
-            print(f"Maximum temperature: {max}")
+                date_daily=convert_date(row[0])
+                min_daily_temp=round(convert_f_to_c(row[1]),1)
+                max_daily_temp=round(convert_f_to_c(row[2]),1)
+    
+    summary_daily_string =(
+        f"{'-' * 4} {date_daily} {'-' * 4}\n"
+        f"  Minimum temperature: {min_daily_temp}{DEGREE_SYMBOL}\n"
+        f"  Maximum temperature: {max_daily_temp}{DEGREE_SYMBOL}"
+    )
+
+    return (summary_daily_string)

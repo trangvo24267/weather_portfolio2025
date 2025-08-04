@@ -5,7 +5,8 @@
         "-s",
         "./tests",
         "-p",
-        "test_*.py"
+        "test*.py"
     ],
-    "python.testing.autoTestDiscoverOnSaveEnabled": true
+    "python.testing.autoTestDiscoverOnSaveEnabled": true,
+    "python.testing.pytestEnabled": false
 }
